@@ -81,7 +81,7 @@ def Pulp_optimization(Teams, N, Data, Value, PlayerList,xPointsTotal, Positions,
                 ExpPoints += int(xPoints[i] - Transfer[i])
                 TotalCost += int(Cost[i])
                 TransferCost += int(Transfer[i])
-                print('{},Team = {}, xPoints = {}, Cost = {}'.format(Names[i], Teams[i], int(xPoints[i]), int(Cost[i])))
+                print('{},Position = {},Team = {}, xPoints = {}, Cost = {}'.format(Names[i], Positions[i], Teams[i], int(xPoints[i]), int(Cost[i])))
                 Squad.append(Names[i])
                 Squad_Position.append(Positions[i])
                 Squad_Team.append(Teams[i])
