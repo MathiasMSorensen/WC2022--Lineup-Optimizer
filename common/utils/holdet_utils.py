@@ -102,3 +102,57 @@ def get_play_off_opps(teamname,sims):
         Final = np.nan
         
     return R16, QF, SF, Final
+
+def get_rw(df_holdet):
+    import mechanize
+    import difflib
+    import html5lib
+    from http.cookiejar import LWPCookieJar
+    import requests
+    import json
+    import pandas as pd
+    browser = mechanize.Browser()
+    cj = LWPCookieJar()
+    browser.set_cookiejar(cj)
+    browser.set_handle_equiv(True)
+    browser.set_handle_redirect(True)
+    browser.set_handle_robots(False)
+    browser.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
+    browser.open('http://www.rotowire.com/users/loginnow.htm')
+    browser.select_form(nr = 0)
+    browser.form['username'] = 'mklarskov'
+    browser.form['password'] = 'mads1234'
+    browser.submit()
+    url = browser.open('https://www.rotowire.com/soccer/tables/projections.php?position=All&league=WOC&type=weekly&myLeagueID=0')
+    json_file_rw = url.read()
+
+    js_read = json.loads(json_file_rw.decode('utf-8'))
+    rw_data = pd.DataFrame(js_read)
+
+    rw = rw_data[['player', 'team',  'opp','position', 'minutes', 'goals', 'assists', 'shots', 'sog', 'chancecreated',\
+            'passes', 'totalpasses', 'crosses', 'accucrosses', 'aerials','dribbles', 'dispossessed','int','tackles',\
+            'tackleswon', 'blocks','clearances', 'cleansheet', 'goalsconc', 'saves', 'fouldrawn','foulscommit', 'yellowcard', 'redcard']]
+
+    rw.columns = ['Player', 'Team', 'Opp', 'Pos', 'MIN', 'G', 'A', 'S', 'SOG', 'CC', 'P','AP', 'CR', 'ACR', 'AW', 'DR', 'DSP', 'INT', 'TKL', 'TKLW', 'BLK', 'CL','CS', 'GC', 'SV', 'FS', 'FC', 'Y', 'R']
+
+    rw['Player_match'] = ""
+    for i in range(len(rw)):
+            try:
+                    rw.loc[i,'Player_match'] = difflib.get_close_matches(rw.loc[i,'Player'], df_holdet['name1'])[0]
+            except: 
+                    rw.loc[i,'Player_match'] = "null"
+            
+    rw.loc[rw["Player"]=="Bono","Player_match"]="Yassine 'Bono' Bounou"
+    rw.loc[rw["Player"]=="Ez Abde","Player_match"]="Abde Ezzalzouli"
+    rw.loc[rw["Player"]=="Hwang Hee-Chan","Player_match"]="Hee-Chan Hwang"
+    rw.loc[rw["Player"]=="Hwang In-beom","Player_match"]="In-Beom Hwang"
+    rw.loc[rw["Player"]=="Kim Jin-su","Player_match"]="Jin-Su Kim"
+    rw.loc[rw["Player"]=="Kim Min-Jae","Player_match"]="Min-jae Kim"
+    rw.loc[rw["Player"]=="Roan Roberto Wilson Gordon","Player_match"]="Roan Wilson"
+    rw.loc[rw["Player"]=="Milad Sarlak","Player_match"]="Milad Mohammadi"
+    rw.loc[(rw["Player"]=="Danilo") & (rw["Team"]=="POR"),"Player_match"]="Danilo Pereira"
+    if len(rw[rw['Player_match'] == "null"])>0:
+            assert("check names, not all is found")
+            
+            
+    return rw
