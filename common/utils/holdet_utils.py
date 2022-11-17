@@ -141,7 +141,7 @@ def get_rw(df_holdet):
                     rw.loc[i,'Player_match'] = difflib.get_close_matches(rw.loc[i,'Player'], df_holdet['name1'])[0]
             except: 
                     rw.loc[i,'Player_match'] = "null"
-            
+   
     rw.loc[rw["Player"]=="Bono","Player_match"]="Yassine 'Bono' Bounou"
     rw.loc[rw["Player"]=="Ez Abde","Player_match"]="Abde Ezzalzouli"
     rw.loc[rw["Player"]=="Hwang Hee-Chan","Player_match"]="Hee-Chan Hwang"
@@ -152,6 +152,8 @@ def get_rw(df_holdet):
     rw.loc[rw["Player"]=="Milad Sarlak","Player_match"]="Milad Mohammadi"
     rw.loc[rw["Player"]=="Wellington Moises Ramirez Preciado","Player_match"] = "Moises Ramirez"
     rw.loc[(rw["Player"]=="Danilo") & (rw["Team"]=="POR"),"Player_match"]="Danilo Pereira"
+    rw.loc[rw["Player"]=="Jose Maria Gimenez","Player_match"] = "Jose Gimenez"
+    rw.loc[rw["Player"]=="Santiago Gimenez","Player_match"] = "Raul Jimenez"
     if len(rw[rw['Player_match'] == "null"])>0:
             assert("check names, not all is found")
             
