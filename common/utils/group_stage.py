@@ -103,10 +103,14 @@ def playoffs(df_winner,_df_group_stage, eng2dan):
         df_winner.loc[(df_winner["name"]==country),"Final"] = Final
         
     df_grid = pd.read_csv("common/ressources/df_grid")
-    df_grid.columns = ["name", "R16_prob", "QF_prob", "SF_prob" ,"Final_prob","W_prob"]
+    df_grid.columns = ["R16_prob", "QF_prob", "SF_prob" ,"Final_prob","W_prob", "name"]
     df_winner = df_winner.merge(df_grid, on = "name")
 
     df_winner["Final"] = df_winner["Final"].replace("null","Argentina")
+    df_winner["R16"] = df_winner["R16"].replace("null","Argentina")
+    df_winner["QF"] = df_winner["QF"].replace("null","Argentina")
+    df_winner["SF"] = df_winner["SF"].replace("null","Argentina")
+    
     for country in df_winner["name"]:
         df_winner.loc[df_winner["name"]==country,"prob_to_win_R16"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"R16"].values[0],"prob_to_win"].values[0]
         df_winner.loc[df_winner["name"]==country,"prob_to_win_QF"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"QF"].values[0],"prob_to_win"].values[0]

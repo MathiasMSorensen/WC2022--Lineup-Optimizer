@@ -154,8 +154,11 @@ def get_rw(df_holdet):
     rw.loc[(rw["Player"]=="Danilo") & (rw["Team"]=="POR"),"Player_match"]="Danilo Pereira"
     rw.loc[rw["Player"]=="Jose Maria Gimenez","Player_match"] = "Jose Gimenez"
     rw.loc[rw["Player"]=="Santiago Gimenez","Player_match"] = "Raul Jimenez"
+    rw.loc[rw["Player"]=="Gavi","Player_match"] = "Pablo Gavi"
+    rw.loc[rw["Player"]=="Jung Woo-young","Player_match"] = "Woo-Young Jung"
+    rw.loc[rw["Player"]=="Hwang Ui-Jo","Player_match"] = "Ui-jo Hwang"
     if len(rw[rw['Player_match'] == "null"])>0:
-            assert("check names, not all is found")
+            print("check names, not all is found")
             
             
     return rw
