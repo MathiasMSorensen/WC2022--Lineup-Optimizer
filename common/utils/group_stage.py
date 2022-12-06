@@ -54,18 +54,18 @@ def get_group_stage(df_get_group_stage_OU, df_group_stage, ROUND, eng2dan):
     df_group_stage["xGH"] = df_group_stage["xG"]*df_group_stage["prob1"]/(df_group_stage["prob1"]+df_group_stage["prob2"])
     df_group_stage["xGA"] = df_group_stage["xG"]*df_group_stage["prob2"]/(df_group_stage["prob1"]+df_group_stage["prob2"])
     
-    df_schedule = pd.read_csv("common/ressources/schedule.csv")
-    df_schedule.rename(columns = {"Home Team":"home_team", "Away Team":"away_team", "Round Number":"round"}, inplace = True)
-    rounds = range(ROUND,4)
-    df_schedule = df_schedule[df_schedule["round"].isin([str(_) for _ in rounds])]
-    df_schedule.loc[(df_schedule["home_team"]=="Korea Republic"),"home_team"]="South_Korea"
-    df_schedule.loc[(df_schedule["away_team"]=="Korea Republic"),"away_team"]="South_Korea"
-    df_group_stage.loc[(df_group_stage["home_team"]=="South Korea"),"home_team"]="South_Korea"
-    df_group_stage.loc[(df_group_stage["away_team"]=="South Korea"),"away_team"]="South_Korea"
+    # df_schedule = pd.read_csv("common/ressources/schedule.csv")
+    # df_schedule.rename(columns = {"Home Team":"home_team", "Away Team":"away_team", "Round Number":"round"}, inplace = True)
+    # rounds = range(ROUND,4)
+    # df_schedule = df_schedule[df_schedule["round"].isin([str(_) for _ in rounds])]
+    # df_schedule.loc[(df_schedule["home_team"]=="Korea Republic"),"home_team"]="South_Korea"
+    # df_schedule.loc[(df_schedule["away_team"]=="Korea Republic"),"away_team"]="South_Korea"
+    # df_group_stage.loc[(df_group_stage["home_team"]=="South Korea"),"home_team"]="South_Korea"
+    # df_group_stage.loc[(df_group_stage["away_team"]=="South Korea"),"away_team"]="South_Korea"
 
-    df_group_stage = df_group_stage.merge(df_schedule[["home_team","away_team","round"]], on = ['home_team','away_team'])
-    df_group_stage.sort_values("round", inplace=True)
-    df_group_stage.reset_index(drop=True, inplace = True)
+    # df_group_stage = df_group_stage.merge(df_schedule[["home_team","away_team","round"]], on = ['home_team','away_team'])
+    # df_group_stage.sort_values("round", inplace=True)
+    # df_group_stage.reset_index(drop=True, inplace = True)
     df_group_stage["home_team"] = df_group_stage["home_team"].apply(lambda x: eng2dan[x])
     df_group_stage["away_team"] = df_group_stage["away_team"].apply(lambda x: eng2dan[x])
     
@@ -102,35 +102,35 @@ def playoffs(df_winner,_df_group_stage, eng2dan):
         df_winner.loc[(df_winner["name"]==country),"SF"] = SF
         df_winner.loc[(df_winner["name"]==country),"Final"] = Final
         
-    df_grid = pd.read_csv("common/ressources/df_grid")
-    df_grid.columns = ["R16_prob", "QF_prob", "SF_prob" ,"Final_prob","W_prob", "name"]
-    df_winner = df_winner.merge(df_grid, on = "name")
+    # df_grid = pd.read_csv("common/ressources/df_grid")
+    # df_grid.columns = ["R16_prob", "QF_prob", "SF_prob" ,"Final_prob","W_prob", "name"]
+    # df_winner = df_winner.merge(df_grid, on = "name")
 
-    df_winner["Final"] = df_winner["Final"].replace("null","Argentina")
-    df_winner["R16"] = df_winner["R16"].replace("null","Argentina")
-    df_winner["QF"] = df_winner["QF"].replace("null","Argentina")
-    df_winner["SF"] = df_winner["SF"].replace("null","Argentina")
+    # df_winner["Final"] = df_winner["Final"].replace("null","Argentina")
+    # df_winner["R16"] = df_winner["R16"].replace("null","Argentina")
+    # df_winner["QF"] = df_winner["QF"].replace("null","Argentina")
+    # df_winner["SF"] = df_winner["SF"].replace("null","Argentina")
     
-    for country in df_winner["name"]:
-        df_winner.loc[df_winner["name"]==country,"prob_to_win_R16"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"R16"].values[0],"prob_to_win"].values[0]
-        df_winner.loc[df_winner["name"]==country,"prob_to_win_QF"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"QF"].values[0],"prob_to_win"].values[0]
-        df_winner.loc[df_winner["name"]==country,"prob_to_win_SF"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"SF"].values[0],"prob_to_win"].values[0]
-        df_winner.loc[df_winner["name"]==country,"prob_to_win_Final"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"Final"].values[0],"prob_to_win"].values[0]
+    # for country in df_winner["name"]:
+    #     df_winner.loc[df_winner["name"]==country,"prob_to_win_R16"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"R16"].values[0],"prob_to_win"].values[0]
+    #     df_winner.loc[df_winner["name"]==country,"prob_to_win_QF"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"QF"].values[0],"prob_to_win"].values[0]
+    #     df_winner.loc[df_winner["name"]==country,"prob_to_win_SF"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"SF"].values[0],"prob_to_win"].values[0]
+    #     df_winner.loc[df_winner["name"]==country,"prob_to_win_Final"] = df_winner.loc[df_winner["name"] == df_winner.loc[df_winner["name"]==country,"Final"].values[0],"prob_to_win"].values[0]
 
-    df_winner["prob_to_win_R16"] = df_winner["prob_to_win"]/(df_winner["prob_to_win_R16"]+df_winner["prob_to_win"])
-    df_winner["prob_to_win_QF"] = df_winner["prob_to_win"]/(df_winner["prob_to_win_QF"]+df_winner["prob_to_win"])
-    df_winner["prob_to_win_SF"] = df_winner["prob_to_win"]/(df_winner["prob_to_win_SF"]+df_winner["prob_to_win"])
-    df_winner["prob_to_win_Final"] = df_winner["prob_to_win"]/(df_winner["prob_to_win_Final"]+df_winner["prob_to_win"])
+    # df_winner["prob_to_win_R16"] = df_winner["prob_to_win"]/(df_winner["prob_to_win_R16"]+df_winner["prob_to_win"])
+    # df_winner["prob_to_win_QF"] = df_winner["prob_to_win"]/(df_winner["prob_to_win_QF"]+df_winner["prob_to_win"])
+    # df_winner["prob_to_win_SF"] = df_winner["prob_to_win"]/(df_winner["prob_to_win_SF"]+df_winner["prob_to_win"])
+    # df_winner["prob_to_win_Final"] = df_winner["prob_to_win"]/(df_winner["prob_to_win_Final"]+df_winner["prob_to_win"])
 
-    df_winner["xG_R16"] = df_winner["prob_to_win_R16"]/df_winner["pwin"]*df_winner["xG"]
-    df_winner["xG_QF"] = df_winner["prob_to_win_QF"]/df_winner["pwin"]*df_winner["xG"]
-    df_winner["xG_SF"] = df_winner["prob_to_win_SF"]/df_winner["pwin"]*df_winner["xG"]
-    df_winner["xG_Final"] = df_winner["prob_to_win_Final"]/df_winner["pwin"]*df_winner["xG"]
+    # df_winner["xG_R16"] = df_winner["prob_to_win_R16"]/df_winner["pwin"]*df_winner["xG"]
+    # df_winner["xG_QF"] = df_winner["prob_to_win_QF"]/df_winner["pwin"]*df_winner["xG"]
+    # df_winner["xG_SF"] = df_winner["prob_to_win_SF"]/df_winner["pwin"]*df_winner["xG"]
+    # df_winner["xG_Final"] = df_winner["prob_to_win_Final"]/df_winner["pwin"]*df_winner["xG"]
 
-    df_winner["xGa_R16"] = df_winner["prob_to_win_R16"]/df_winner["pwin"]*df_winner["xGa"]
-    df_winner["xGa_QF"] = df_winner["prob_to_win_QF"]/df_winner["pwin"]*df_winner["xGa"]
-    df_winner["xGa_SF"] = df_winner["prob_to_win_SF"]/df_winner["pwin"]*df_winner["xGa"]
-    df_winner["xGa_Final"] = df_winner["prob_to_win_Final"]/df_winner["pwin"]*df_winner["xGa"]
+    # df_winner["xGa_R16"] = df_winner["prob_to_win_R16"]/df_winner["pwin"]*df_winner["xGa"]
+    # df_winner["xGa_QF"] = df_winner["prob_to_win_QF"]/df_winner["pwin"]*df_winner["xGa"]
+    # df_winner["xGa_SF"] = df_winner["prob_to_win_SF"]/df_winner["pwin"]*df_winner["xGa"]
+    # df_winner["xGa_Final"] = df_winner["prob_to_win_Final"]/df_winner["pwin"]*df_winner["xGa"]
     # df_winner.to_csv("common/ressources/df_winner", index = False)
     
     return df_winner
